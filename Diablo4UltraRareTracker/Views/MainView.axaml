@@ -1,0 +1,124 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="clr-namespace:Diablo4UltraRareTracker.ViewModels"
+             xmlns:converter="clr-namespace:Diablo4UltraRareTracker.Converter"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="Diablo4UltraRareTracker.Views.MainView"
+             x:DataType="vm:MainViewModel"
+             Background="#222222">
+    <Design.DataContext>
+        <!-- This only sets the DataContext for the previewer in an IDE,
+         to set the actual DataContext for runtime, set the DataContext property in code (look at App.axaml.cs) -->
+        <vm:MainViewModel />
+    </Design.DataContext>
+
+    <UserControl.Styles>
+        <Style
+            Selector="ListBoxItem:pointerover /template/ ContentPresenter#PART_ContentPresenter, ListBoxItem:selected /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+    </UserControl.Styles>
+
+    <Grid RowDefinitions="Auto,*" ColumnDefinitions="*,Auto">
+        <TextBlock
+            Grid.Column="0"
+            FontFamily="avares://Diablo4UltraRareTracker/Assets/Diablo Heavy.ttf#Diablo"
+            FontSize="45"
+            Margin="20" TextAlignment="Center">
+
+            <Run Foreground="#630209">Diablo IV</Run>
+            <Run>Ultra Rare Item Tracker</Run>
+        </TextBlock>
+
+        <Button Grid.Column="1" Margin="5 0" Padding="10">Submit</Button>
+
+        <ListBox Grid.Column="0"
+                 Grid.ColumnSpan="2"
+                 Grid.Row="1"
+                 ItemsSource="{Binding RareItems}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+
+                        <Border Background="#333333" Padding="20">
+
+                            <StackPanel>
+
+                                <ToolTip.Tip>
+                                    <Image
+                                        Source="{Binding ToolTipImage, Converter={x:Static converter:AssetLoadConverter.Instance}}" />
+                                </ToolTip.Tip>
+
+                                <TextBlock Text="{Binding Name}" FontSize="32" />
+
+                                <TextBlock Foreground="Gray"
+                                           Text="{Binding EstimatedDropChance, StringFormat='Estimated Drop Chance: \{0:0.0000000%\}'}" />
+                            </StackPanel>
+
+                        </Border>
+
+
+                        <ListBox ItemsSource="{Binding Drops}" Margin="5">
+
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Background="#333333">
+                                        <TextBlock FontSize="24"
+                                                   Margin="0 20 0 0"
+                                                   TextAlignment="Center">
+                                            <Run>Player: </Run>
+
+                                            <!--TODO Hyperlink-->
+                                            <InlineUIContainer>
+                                                <SelectableTextBlock Text="{Binding PlayerName, TargetNullValue='???'}"
+                                                                     TextDecorations="Underline"
+                                                                     ToolTip.Tip="{Binding PlayerUrl}"
+                                                                     PointerPressed="PlayerName_PointerPressed" />
+                                            </InlineUIContainer>
+
+                                        </TextBlock>
+
+                                        <TextBlock FontSize="24"
+                                                   TextAlignment="Center">
+                                            <Run>Region: </Run>
+                                            <Run Text="{Binding Region, TargetNullValue='???'}" />
+                                        </TextBlock>
+
+                                        <TextBlock FontSize="24"
+                                                   TextAlignment="Center">
+                                            <Run>Date: </Run>
+                                            <Run Text="{Binding Date, TargetNullValue='???'}" />
+                                        </TextBlock>
+
+                                        <Image
+                                            Source="{Binding ResolvedProofImage^}"
+                                            Width="400" Height="400"
+                                            PointerPressed="DropProofImageClicked" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+
+                        </ListBox>
+
+
+                    </StackPanel>
+
+
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+
+
+        </ListBox>
+
+
+    </Grid>
+
+</UserControl>
